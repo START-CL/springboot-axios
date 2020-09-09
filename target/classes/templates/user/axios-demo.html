@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 开发环境版本，包含了用帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+
+<!--<h1 th:text="${name}"></h1>-->
+<!--<h1 th:text="${username}"></h1>-->
+<!--<h1 th:text="${age}"></h1>-->
+
+    <div id="app">
+        请输入您的姓名:<input type="text" v-model="loginForm.username" name="username">
+        <br>
+        请输入您的密码:<input type="password" v-model="loginForm.password" name="password">
+        <button @click="send">发送ajax请求</button>
+    </div>
+
+    <script type="application/javascript">
+        new Vue({
+            el:"#app",
+            data(){
+                return {
+                    loginForm: {
+                        username:"",
+                        password:"",
+                    },
+                }
+            },
+            methods:{
+                send(){
+                    axios({
+                        headers: {'Content-Type': 'application/json;'},
+                        method:'post',
+                        url:'/message',
+                        transformRequest: [function (data) {
+                            // 对 data 进行任意转换处理
+                            return JSON.stringify(data);
+                        }],
+                        data: this.loginForm
+                    }).then(function(res){
+                        console.log(res.data);
+                        console.log(res.status);
+                        console.log(res.statusText);
+                        console.log(res.headers);
+                        console.log(res.config);
+                    }).catch(err => {
+                        console.log('请求失败：'+err.status+','+err.statusText);
+                    });
+                }
+            }
+        });
+    </script>
+<!--<script th:src="@{js/vue.js}"></script>-->
+<script th:src="@{/js/axios.js}"></script>
+<script>Vue.config.productionTip=false</script>
+</body>
+</html>
